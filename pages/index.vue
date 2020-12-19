@@ -1,0 +1,208 @@
+<template>
+  <div class="container">
+    <div class="heading">
+      <p>Fast Reading Tool</p>
+    </div>
+    <div class="textbox">
+      <Info class="info" />
+      <textarea class="textarea" />
+      <div class="button">
+        Start
+      </div>
+    </div>
+    <div class="writer-wrapper">
+      <Writer class="writer" />
+    </div>
+    <HomepageIcon class="homepage-icon" />
+  </div>
+</template>
+
+<script lang="ts">
+import Vue from "vue";
+import Writer from "@/assets/writer.svg?inline";
+import Info from "@/assets/info.svg?inline";
+import HomepageIcon from "@/assets/homepage-icon.svg?inline";
+
+export default Vue.extend({
+  components: {
+    Writer,
+    Info,
+    HomepageIcon
+  }
+});
+</script>
+
+<style lang="scss">
+@import url("https://fonts.googleapis.com/css2?family=Reenie+Beanie&display=swap");
+@keyframes slide-right-writer {
+  from {
+    left: -200px;
+  }
+  to {
+    left: 20px;
+  }
+}
+
+@keyframes slide-right-textbox {
+  from {
+    left: -200px;
+  }
+  to {
+    left: 22vh;
+  }
+}
+
+@keyframes slide-left {
+  from {
+    right: -200px;
+  }
+  to {
+    right: 10vh;
+  }
+}
+
+@keyframes breath {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.4);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.container {
+  position: relative;
+  margin: 0 auto;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+  .heading {
+    font-size: 60px;
+    line-height: 70px;
+    align-self: start;
+    margin-top: 20px;
+    color: #030047;
+    letter-spacing: 5px;
+    color: #5f5fff;
+    padding: 20px;
+    border-radius: 50px;
+    font-weight: 200;
+    font-family: "Reenie Beanie";
+  }
+
+  .writer-wrapper {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    .writer {
+      height: 30vh;
+      width: 30vh;
+      bottom: 0;
+    }
+    animation-name: slide-right-writer;
+    animation-duration: 1.5s;
+  }
+
+  .textbox {
+    position: absolute;
+    border: 1px solid #e4e4e4;
+    border-radius: 10px;
+    height: 45vh;
+    width: 60vh;
+    left: 22vh;
+    bottom: 28vh;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
+    animation-name: slide-right-textbox;
+    animation-duration: 1.5s;
+
+    .info {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      width: 25px;
+      height: 25px;
+      animation-delay: 1.5s;
+      animation: breath infinite 1.5s;
+      path {
+        fill: #5f5fff;
+      }
+    }
+
+    .button {
+      position: absolute;
+      padding: 10px 15px;
+      background-color: #ff3e6c;
+      color: white;
+      font-size: 20px;
+      letter-spacing: 2px;
+      border-radius: 5px 2px 10px 2px;
+      box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.25);
+      bottom: -1px;
+      right: -1px;
+      font-weight: bold;
+      font-family: "Reenie Beanie";
+    }
+  }
+
+  .textarea {
+    position: absolute;
+    height: 42vh;
+    width: 50vh;
+    left: 10px;
+    border: none;
+    top: 5px;
+    font-size: 13px;
+    margin: 5px;
+    resize: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .homepage-icon {
+    display: none;
+    position: absolute;
+    right: 10vh;
+    width: 30vw;
+    height: 100%;
+    animation-name: slide-left;
+    animation-duration: 1.5s;
+  }
+}
+@media screen and (min-width: 1280px) {
+  .homepage-icon {
+    display: block !important;
+  }
+}
+@media screen and (max-width: 768px) {
+  .container {
+    .textbox {
+      left: unset;
+      height: 25vh;
+      width: 40vh;
+      bottom: 30vh;
+      .info {
+        right: 5px;
+        top: 5px;
+      }
+      .textarea {
+        height: 23vh;
+        width: 30vh;
+        font-size: 11px;
+      }
+      .button {
+        padding: 7.5px 10px !important;
+      }
+    }
+  }
+}
+</style>
