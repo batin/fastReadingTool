@@ -3,33 +3,73 @@
     <div class="heading">
       <p>Fast Reading Tool</p>
     </div>
-    <div class="textbox">
+    <div class="reading-section">
+      <p class="word">
+        {{ currentWord }}
+      </p>
+    </div>
+    <div v-if="!hasStarted" class="textbox">
       <Info class="info" />
-      <textarea class="textarea" />
-      <div class="button">
+      <textarea v-model="text" class="textarea" placeholder="" />
+      <div class="button" @click="start">
         Start
       </div>
     </div>
-    <div class="writer-wrapper">
+    <div v-if="!hasStarted" class="writer-wrapper">
       <Writer class="writer" />
     </div>
-    <HomepageIcon class="homepage-icon" />
+    <HomepageIcon v-if="!hasStarted" class="homepage-icon" />
   </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Writer from "@/assets/writer.svg?inline";
-import Info from "@/assets/info.svg?inline";
-import HomepageIcon from "@/assets/homepage-icon.svg?inline";
+import Vue from "vue"
+import Writer from "@/assets/writer.svg?inline"
+import Info from "@/assets/info.svg?inline"
+import HomepageIcon from "@/assets/homepage-icon.svg?inline"
 
 export default Vue.extend({
   components: {
     Writer,
     Info,
     HomepageIcon
+  },
+
+  data () {
+    return {
+      text: "" as string,
+      currentWord: "" as string,
+      dataSet: [] as string[],
+      index: 0 as number,
+      speed: 300 as number,
+      hasStarted: false as boolean,
+      isPlaying: false as boolean
+    }
+  },
+
+  methods: {
+    start () {
+      this.hasStarted = true
+      this.isPlaying = true
+      this.splitText()
+
+      setInterval(() => {
+        if (this.isPlaying) {
+          this.currentWord = this.dataSet[this.index]
+          this.index++
+        }
+      }, this.speed)
+    },
+
+    stop () {
+      this.isPlaying = false
+    },
+
+    splitText () {
+      this.dataSet = this.text.split(" ")
+    }
   }
-});
+})
 </script>
 
 <style lang="scss">
@@ -87,11 +127,9 @@ export default Vue.extend({
     line-height: 70px;
     align-self: start;
     margin-top: 20px;
-    color: #030047;
     letter-spacing: 5px;
     color: #5f5fff;
     padding: 20px;
-    border-radius: 50px;
     font-weight: 200;
     font-family: "Reenie Beanie";
   }
@@ -177,12 +215,25 @@ export default Vue.extend({
     animation-name: slide-left;
     animation-duration: 1.5s;
   }
+  .reading-section {
+    position: absolute;
+    .word {
+      font-size: 60px;
+      line-height: 70px;
+      letter-spacing: 5px;
+      color: #030047;
+      border-radius: 50px;
+      font-weight: 200;
+    }
+  }
 }
+
 @media screen and (min-width: 1280px) {
   .homepage-icon {
     display: block !important;
   }
 }
+
 @media screen and (max-width: 768px) {
   .container {
     .textbox {
