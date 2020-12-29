@@ -19,14 +19,16 @@
       <Writer class="writer" />
     </div>
     <HomepageIcon v-if="!hasStarted" class="homepage-icon" />
+    <MediaBar v-if="hasStarted" :onStop="onStop" :onStart="onStart" :onJump="onJump" :isPlaying="isPlaying" />
   </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue"
-import Writer from "@/assets/writer.svg?inline"
-import Info from "@/assets/info.svg?inline"
-import HomepageIcon from "@/assets/homepage-icon.svg?inline"
+import Vue from "vue";
+import Writer from "@/assets/writer.svg?inline";
+import Info from "@/assets/info.svg?inline";
+import HomepageIcon from "@/assets/homepage-icon.svg?inline";
+import MediaBar from "@/components/MediaBar.vue";
 
 export default Vue.extend({
   components: {
@@ -35,7 +37,7 @@ export default Vue.extend({
     HomepageIcon
   },
 
-  data () {
+  data() {
     return {
       text: "" as string,
       currentWord: "" as string,
@@ -44,32 +46,44 @@ export default Vue.extend({
       speed: 300 as number,
       hasStarted: false as boolean,
       isPlaying: false as boolean
-    }
+    };
   },
 
   methods: {
-    start () {
-      this.hasStarted = true
-      this.isPlaying = true
-      this.splitText()
+    start() {
+      this.hasStarted = true;
+      this.isPlaying = true;
+      this.splitText();
 
       setInterval(() => {
         if (this.isPlaying) {
-          this.currentWord = this.dataSet[this.index]
-          this.index++
+          this.currentWord = this.dataSet[this.index];
+          this.index++;
         }
-      }, this.speed)
+      }, this.speed);
     },
 
-    stop () {
-      this.isPlaying = false
+    splitText() {
+      this.dataSet = this.text.split(" ");
     },
 
-    splitText () {
-      this.dataSet = this.text.split(" ")
+    onStart: function() {
+      console.log("started")
+      this.isPlaying = true;
+    },
+
+    onStop: function() {
+      console.log("stopped")
+      this.isPlaying = false;
+    },
+
+    onJump: function(count: number) {
+      console.log("jumped", count)
+      this.index += count;
+      this.currentWord = this.dataSet[this.index];
     }
   }
-})
+});
 </script>
 
 <style lang="scss">
