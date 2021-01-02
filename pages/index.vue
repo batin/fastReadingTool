@@ -19,7 +19,15 @@
       <Writer class="writer" />
     </div>
     <HomepageIcon v-if="!hasStarted" class="homepage-icon" />
-    <MediaBar v-if="hasStarted" :onStop="onStop" :onStart="onStart" :onJump="onJump" :isPlaying="isPlaying" />
+    <MediaBar
+      v-if="hasStarted"
+      :onStop="onStop"
+      :onStart="onStart"
+      :onJump="onJump"
+      :isPlaying="isPlaying"
+      :speed="speed"
+      :onSpeedChange="onSpeedChange"
+    />
   </div>
 </template>
 
@@ -36,7 +44,6 @@ export default Vue.extend({
     Info,
     HomepageIcon
   },
-
   data() {
     return {
       text: "" as string,
@@ -45,40 +52,46 @@ export default Vue.extend({
       index: 0 as number,
       speed: 300 as number,
       hasStarted: false as boolean,
-      isPlaying: false as boolean
+      isPlaying: false as boolean,
+      currentInterval: 0 as any
     };
   },
 
   methods: {
     start() {
-      this.hasStarted = true;
+      if (this.text.length) {
+        this.hasStarted = true;
+      }
       this.isPlaying = true;
       this.splitText();
 
-      setInterval(() => {
+      console.log(this.speed);
+      this.currentInterval = setInterval(() => {
         if (this.isPlaying) {
           this.currentWord = this.dataSet[this.index];
           this.index++;
         }
       }, this.speed);
     },
-
     splitText() {
       this.dataSet = this.text.split(" ");
     },
 
     onStart: function() {
-      console.log("started")
       this.isPlaying = true;
     },
 
     onStop: function() {
-      console.log("stopped")
       this.isPlaying = false;
     },
 
+    onSpeedChange: function(e: any) {
+      clearInterval(this.currentInterval)
+      this.speed = Number(e.target.value);
+      this.start()
+    },
+
     onJump: function(count: number) {
-      console.log("jumped", count)
       this.index += count;
       this.currentWord = this.dataSet[this.index];
     }
@@ -135,6 +148,7 @@ export default Vue.extend({
   justify-content: center;
   align-items: center;
   text-align: center;
+  overflow: hidden;
 
   .heading {
     font-size: 60px;
@@ -181,6 +195,7 @@ export default Vue.extend({
       height: 25px;
       animation-delay: 1.5s;
       animation: breath infinite 1.5s;
+      cursor: pointer;
       path {
         fill: #5f5fff;
       }
@@ -198,6 +213,7 @@ export default Vue.extend({
       bottom: -1px;
       right: -1px;
       font-weight: bold;
+      cursor: pointer;
       font-family: "Reenie Beanie";
     }
   }
