@@ -21,30 +21,32 @@
     <HomepageIcon v-if="!hasStarted" class="homepage-icon" />
     <MediaBar
       v-if="hasStarted"
-      :onStop="onStop"
-      :onStart="onStart"
-      :onJump="onJump"
-      :isPlaying="isPlaying"
+      :on-stop="onStop"
+      :on-start="onStart"
+      :on-jump="onJump"
+      :is-playing="isPlaying"
       :speed="speed"
-      :onSpeedChange="onSpeedChange"
+      :on-speed-change="onSpeedChange"
     />
   </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Writer from "@/assets/writer.svg?inline";
-import Info from "@/assets/info.svg?inline";
-import HomepageIcon from "@/assets/homepage-icon.svg?inline";
-import MediaBar from "@/components/MediaBar.vue";
+import Vue from "vue"
+import Writer from "@/assets/writer.svg?inline"
+import Info from "@/assets/info.svg?inline"
+import HomepageIcon from "@/assets/homepage-icon.svg?inline"
+import MediaBar from "@/components/MediaBar.vue"
 
 export default Vue.extend({
   components: {
     Writer,
     Info,
-    HomepageIcon
+    HomepageIcon,
+    MediaBar
   },
-  data() {
+
+  data () {
     return {
       text: "" as string,
       currentWord: "" as string,
@@ -54,49 +56,48 @@ export default Vue.extend({
       hasStarted: false as boolean,
       isPlaying: false as boolean,
       currentInterval: 0 as any
-    };
+    }
   },
 
   methods: {
-    start() {
+    start () {
       if (this.text.length) {
-        this.hasStarted = true;
+        this.hasStarted = true
       }
-      this.isPlaying = true;
-      this.splitText();
+      this.isPlaying = true
+      this.splitText()
 
-      console.log(this.speed);
       this.currentInterval = setInterval(() => {
         if (this.isPlaying) {
-          this.currentWord = this.dataSet[this.index];
-          this.index++;
+          this.currentWord = this.dataSet[this.index]
+          this.index++
         }
-      }, this.speed);
+      }, this.speed)
     },
-    splitText() {
-      this.dataSet = this.text.split(" ");
-    },
-
-    onStart: function() {
-      this.isPlaying = true;
+    splitText () {
+      this.dataSet = this.text.split(" ")
     },
 
-    onStop: function() {
-      this.isPlaying = false;
+    onStart () {
+      this.isPlaying = true
     },
 
-    onSpeedChange: function(e: any) {
+    onStop () {
+      this.isPlaying = false
+    },
+
+    onSpeedChange (e: any) {
       clearInterval(this.currentInterval)
-      this.speed = Number(e.target.value);
+      this.speed = Number(e.target.value)
       this.start()
     },
 
-    onJump: function(count: number) {
-      this.index += count;
-      this.currentWord = this.dataSet[this.index];
+    onJump (count: number) {
+      this.index += count
+      this.currentWord = this.dataSet[this.index]
     }
   }
-});
+})
 </script>
 
 <style lang="scss">

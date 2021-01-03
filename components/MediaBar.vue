@@ -3,23 +3,23 @@
     <div class="first-line">
       <FB10 @click="onJump(-10)" />
       <FB1 @click="onJump(-1)" />
-      <Pause @click="onStop" v-if="isPlaying" />
-      <Start @click="onStart" v-else />
+      <Pause v-if="isPlaying" @click="onStop" />
+      <Start v-else @click="onStart" />
       <FF1 @click="onJump(1)" />
       <FF10 @click="onJump(10)" />
     </div>
     <div class="second-line">
       <div class="progress-bar">
         <input
-          type="range"
           id="volume"
+          type="range"
           name="volume"
           step="1"
           :value="speed"
           min="100"
           max="2000"
           @change="onSpeedChange"
-        />
+        >
         <div class="speed">
           {{ speed }}
         </div>
@@ -30,13 +30,13 @@
 </template>
 
 <script>
-import FF10 from "@/assets/ff10.svg?inline";
-import FF1 from "@/assets/ff1.svg?inline";
-import FB10 from "@/assets/fb10.svg?inline";
-import FB1 from "@/assets/fb1.svg?inline";
-import Start from "@/assets/start.svg?inline";
-import Pause from "@/assets/pause.svg?inline";
-import Restart from "@/assets/restart.svg?inline";
+import FF10 from "@/assets/ff10.svg?inline"
+import FF1 from "@/assets/ff1.svg?inline"
+import FB10 from "@/assets/fb10.svg?inline"
+import FB1 from "@/assets/fb1.svg?inline"
+import Start from "@/assets/start.svg?inline"
+import Pause from "@/assets/pause.svg?inline"
+import Restart from "@/assets/restart.svg?inline"
 export default {
   components: {
     FF10,
@@ -55,7 +55,7 @@ export default {
     isPlaying: { type: Boolean },
     speed: { type: Number }
   }
-};
+}
 </script>
 
 <style lang="scss">
