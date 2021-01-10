@@ -5,12 +5,12 @@
     </div>
     <div class="reading-section">
       <p class="word">
-        {{ currentWord }}
+        {{ currentWords }}
       </p>
     </div>
     <div v-if="!hasStarted" class="textbox">
       <Info class="info" />
-      <textarea v-model="text" class="textarea" placeholder="" />
+      <textarea v-model="text" class="textarea" placeholder="Enter your text here" />
       <div class="button" @click="start">
         Start
       </div>
@@ -28,76 +28,106 @@
       :speed="speed"
       :on-speed-change="onSpeedChange"
     />
+    <BottomBar
+      v-if="hasStarted"
+      :index="index"
+      :totalCount="dataSet.length"
+      :splitSize="splitSize"
+      :onSplitSizeChange="onSplitSizeChange"
+    />
+    <EditButton 
+    />
   </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue"
-import Writer from "@/assets/writer.svg?inline"
-import Info from "@/assets/info.svg?inline"
-import HomepageIcon from "@/assets/homepage-icon.svg?inline"
-import MediaBar from "@/components/MediaBar.vue"
+import Vue from "vue";
+import Writer from "@/assets/writer.svg?inline";
+import Info from "@/assets/info.svg?inline";
+import HomepageIcon from "@/assets/homepage-icon.svg?inline";
+import MediaBar from "@/components/MediaBar.vue";
+import BottomBar from "@/components/BottomBar.vue";
 
 export default Vue.extend({
   components: {
     Writer,
     Info,
     HomepageIcon,
-    MediaBar
+    MediaBar,
+    BottomBar
   },
 
-  data () {
+  data() {
     return {
       text: "" as string,
-      currentWord: "" as string,
+      currentWords: "" as string,
       dataSet: [] as string[],
       index: 0 as number,
-      speed: 300 as number,
+      speed: 1300 as number,
       hasStarted: false as boolean,
       isPlaying: false as boolean,
-      currentInterval: 0 as any
-    }
+      currentInterval: 0 as any,
+      splitSize: 1 as number
+    };
   },
 
   methods: {
-    start () {
+    start() {
       if (this.text.length) {
-        this.hasStarted = true
+        this.hasStarted = true;
       }
-      this.isPlaying = true
-      this.splitText()
+      this.isPlaying = true;
+      this.splitText();
 
       this.currentInterval = setInterval(() => {
         if (this.isPlaying) {
-          this.currentWord = this.dataSet[this.index]
-          this.index++
+          this.onJump(this.splitSize)
         }
-      }, this.speed)
-    },
-    splitText () {
-      this.dataSet = this.text.split(" ")
+      }, 2000 - this.speed);
     },
 
-    onStart () {
-      this.isPlaying = true
+    chunk(arr: Array<string>, chunkSize: number) {
+      if (chunkSize <= 0) throw "Invalid chunk size";
+      let Arr = [];
+      for (let i = 0, len = arr.length; i < len; i += chunkSize)
+        Arr.push(arr.slice(i, i + chunkSize));
+      return Arr;
     },
 
-    onStop () {
-      this.isPlaying = false
+    splitText() {
+      this.dataSet = this.chunk(
+        this.text.split(" "),
+        this.splitSize
+      ).map((item: Array<string>) => item.join(" "));
     },
 
-    onSpeedChange (e: any) {
-      clearInterval(this.currentInterval)
-      this.speed = Number(e.target.value)
-      this.start()
+    onStart() {
+      this.isPlaying = true;
     },
 
-    onJump (count: number) {
-      this.index += count
-      this.currentWord = this.dataSet[this.index]
+    onStop() {
+      this.isPlaying = false;
+    },
+
+    onSpeedChange(e: any) {
+      clearInterval(this.currentInterval);
+      this.speed = Number(e.target.value);
+      this.start();
+    },
+
+    onJump(count: number) {
+      if (this.index + count <= this.dataSet.length){
+        this.index += count;
+        this.currentWords = this.dataSet[this.index];
+      }
+    },
+
+    onSplitSizeChange(count: number) {
+      this.splitSize += count;
+      this.splitText();
     }
   }
-})
+});
 </script>
 
 <style lang="scss">
@@ -235,6 +265,10 @@ export default Vue.extend({
     &:focus {
       outline: none;
     }
+    &::placeholder {
+      font-family: "Reenie Beanie";
+      font-size: 30px;
+    }
   }
 
   .homepage-icon {
@@ -268,6 +302,7 @@ export default Vue.extend({
 @media screen and (max-width: 768px) {
   .container {
     .textbox {
+      animation-name: none;
       left: unset;
       height: 25vh;
       width: 40vh;
@@ -285,6 +320,25 @@ export default Vue.extend({
         padding: 7.5px 10px !important;
       }
     }
+    .reading-section {
+      position: absolute;
+      .word {
+        font-size: 40px;
+        margin: 0 15px;
+        padding-bottom: 50px;
+      }
+    }
   }
 }
+@media screen and (max-width: 568px) {
+  .container {
+    .heading { font-size: 35px }
+  }
+  .container .reading-section .word {
+    font-size: 30px;
+    margin: 0 15px;
+    padding-bottom: 50px;
+  }
+}
+
 </style>
