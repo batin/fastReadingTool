@@ -1,3 +1,4 @@
+/*eslint no-throw-literal: 0*/
 <template>
   <div class="container">
     <div class="heading">
@@ -31,22 +32,21 @@
     <BottomBar
       v-if="hasStarted"
       :index="index"
-      :totalCount="dataSet.length"
-      :splitSize="splitSize"
-      :onSplitSizeChange="onSplitSizeChange"
+      :total-count="dataSet.length"
+      :split-size="splitSize"
+      :on-split-size-change="onSplitSizeChange"
     />
-    <EditButton 
-    />
+    <EditButton />
   </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Writer from "@/assets/writer.svg?inline";
-import Info from "@/assets/info.svg?inline";
-import HomepageIcon from "@/assets/homepage-icon.svg?inline";
-import MediaBar from "@/components/MediaBar.vue";
-import BottomBar from "@/components/BottomBar.vue";
+import Vue from "vue"
+import Writer from "@/assets/writer.svg?inline"
+import Info from "@/assets/info.svg?inline"
+import HomepageIcon from "@/assets/homepage-icon.svg?inline"
+import MediaBar from "@/components/MediaBar.vue"
+import BottomBar from "@/components/BottomBar.vue"
 
 export default Vue.extend({
   components: {
@@ -57,7 +57,7 @@ export default Vue.extend({
     BottomBar
   },
 
-  data() {
+  data () {
     return {
       text: "" as string,
       currentWords: "" as string,
@@ -68,66 +68,65 @@ export default Vue.extend({
       isPlaying: false as boolean,
       currentInterval: 0 as any,
       splitSize: 1 as number
-    };
+    }
   },
 
   methods: {
-    start() {
+    start () {
       if (this.text.length) {
-        this.hasStarted = true;
+        this.hasStarted = true
       }
-      this.isPlaying = true;
-      this.splitText();
+      this.isPlaying = true
+      this.splitText()
 
       this.currentInterval = setInterval(() => {
         if (this.isPlaying) {
           this.onJump(this.splitSize)
         }
-      }, 2000 - this.speed);
+      }, 2000 - this.speed)
     },
 
-    chunk(arr: Array<string>, chunkSize: number) {
-      if (chunkSize <= 0) throw "Invalid chunk size";
-      let Arr = [];
-      for (let i = 0, len = arr.length; i < len; i += chunkSize)
-        Arr.push(arr.slice(i, i + chunkSize));
-      return Arr;
+    chunk (arr: Array<string>, chunkSize: number) {
+      if (chunkSize <= 0) { throw "Invalid chunk size" }
+      const Arr = []
+      for (let i = 0, len = arr.length; i < len; i += chunkSize) { Arr.push(arr.slice(i, i + chunkSize)) }
+      return Arr
     },
 
-    splitText() {
+    splitText () {
       this.dataSet = this.chunk(
         this.text.split(" "),
         this.splitSize
-      ).map((item: Array<string>) => item.join(" "));
+      ).map((item: Array<string>) => item.join(" "))
     },
 
-    onStart() {
-      this.isPlaying = true;
+    onStart () {
+      this.isPlaying = true
     },
 
-    onStop() {
-      this.isPlaying = false;
+    onStop () {
+      this.isPlaying = false
     },
 
-    onSpeedChange(e: any) {
-      clearInterval(this.currentInterval);
-      this.speed = Number(e.target.value);
-      this.start();
+    onSpeedChange (e: any) {
+      clearInterval(this.currentInterval)
+      this.speed = Number(e.target.value)
+      this.start()
     },
 
-    onJump(count: number) {
-      if (this.index + count <= this.dataSet.length && this.index + count > -1){
-        this.index += count;
-        this.currentWords = this.dataSet[this.index];
+    onJump (count: number) {
+      if (this.index + count <= this.dataSet.length && this.index + count > -1) {
+        this.index += count
+        this.currentWords = this.dataSet[this.index]
       }
     },
 
-    onSplitSizeChange(count: number) {
-      this.splitSize += count;
-      this.splitText();
+    onSplitSizeChange (count: number) {
+      this.splitSize += count
+      this.splitText()
     }
   }
-});
+})
 </script>
 
 <style lang="scss">

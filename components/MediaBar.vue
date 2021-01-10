@@ -19,7 +19,7 @@
           min="1"
           max="2000"
           @change="onSpeedChange"
-        />
+        >
         <div class="speed">
           {{ speed }}
         </div>
@@ -30,13 +30,13 @@
 </template>
 
 <script>
-import FF10 from "@/assets/ff10.svg?inline";
-import FF1 from "@/assets/ff1.svg?inline";
-import FB10 from "@/assets/fb10.svg?inline";
-import FB1 from "@/assets/fb1.svg?inline";
-import Start from "@/assets/start.svg?inline";
-import Pause from "@/assets/pause.svg?inline";
-import Restart from "@/assets/restart.svg?inline";
+import FF10 from "@/assets/ff10.svg?inline"
+import FF1 from "@/assets/ff1.svg?inline"
+import FB10 from "@/assets/fb10.svg?inline"
+import FB1 from "@/assets/fb1.svg?inline"
+import Start from "@/assets/start.svg?inline"
+import Pause from "@/assets/pause.svg?inline"
+import Restart from "@/assets/restart.svg?inline"
 export default {
   components: {
     FF10,
@@ -55,7 +55,7 @@ export default {
     isPlaying: { type: Boolean },
     speed: { type: Number }
   }
-};
+}
 </script>
 
 <style lang="scss">

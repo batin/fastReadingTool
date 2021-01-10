@@ -5,13 +5,13 @@
 </template>
 
 <script>
-import Edit from "@/assets/edit.svg?inline";
+import Edit from "@/assets/edit.svg?inline"
 export default {
   components: { Edit },
   props: {
     onEdit: { type: Function }
   }
-};
+}
 </script>
 
 <style lang="scss">

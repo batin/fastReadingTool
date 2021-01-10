@@ -1,11 +1,17 @@
 <template>
   <div class="bottom-media-bar">
     <div class="media left">
-      <div @click="() => onSplitSizeChange(-1)">-</div>
+      <div @click="() => onSplitSizeChange(-1)">
+        -
+      </div>
       {{ splitSize }}
-      <div @click="onSplitSizeChange(1)">+</div>
+      <div @click="onSplitSizeChange(1)">
+        +
+      </div>
     </div>
-    <div class="media right">{{ index }} / {{ totalCount }}</div>
+    <div class="media right">
+      {{ index }} / {{ totalCount }}
+    </div>
   </div>
 </template>
 
@@ -18,7 +24,7 @@ export default {
     totalCount: { type: Number },
     splitSize: { type: Number }
   }
-};
+}
 </script>
 
 <style lang="scss">

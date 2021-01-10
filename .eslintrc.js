@@ -8,6 +8,7 @@ module.exports = {
   plugins: [],
   // add your custom rules here
   rules: {
-    quotes: ["warn", "double"]
+    quotes: ["warn", "double"],
+    "no-throw-literal": 0
   }
 }
