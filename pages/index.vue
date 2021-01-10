@@ -116,7 +116,7 @@ export default Vue.extend({
     },
 
     onJump(count: number) {
-      if (this.index + count <= this.dataSet.length){
+      if (this.index + count <= this.dataSet.length && this.index + count > -1){
         this.index += count;
         this.currentWords = this.dataSet[this.index];
       }
