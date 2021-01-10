@@ -4,7 +4,7 @@
       <FB10 @click="onJump(-10)" />
       <FB1 @click="onJump(-1)" />
       <Pause v-if="isPlaying" @click="onStop" />
-      <Start v-else @click="onStart" />
+      <Start v-else @click="onPlay" />
       <FF1 @click="onJump(1)" />
       <FF10 @click="onJump(10)" />
     </div>
@@ -24,7 +24,7 @@
           {{ speed }}
         </div>
       </div>
-      <Restart />
+      <Restart @click="onRestart" />
     </div>
   </div>
 </template>
@@ -48,10 +48,11 @@ export default {
     Restart
   },
   props: {
-    onStart: { type: Function },
+    onPlay: { type: Function },
     onStop: { type: Function },
     onJump: { type: Function },
     onSpeedChange: { type: Function },
+    onRestart: { type: Function },
     isPlaying: { type: Boolean },
     speed: { type: Number }
   }
@@ -68,6 +69,7 @@ export default {
   padding: 0 5vh;
   background-color: #ff3e6c;
   bottom: 10vh;
+  cursor: default;
   .second-line {
     display: flex;
     width: 100%;

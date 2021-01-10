@@ -1,5 +1,5 @@
 <template>
-  <div class="editButton">
+  <div class="editButton" @click="onEdit">
     <Edit />
   </div>
 </template>
@@ -26,9 +26,11 @@ export default {
   right: 10vh;
   width: 50px;
   height: 50px;
+  cursor: pointer;
   svg {
     width: 32px;
     height: 32px;
+    margin-left: 2px;
   }
 }
 
@@ -54,6 +56,7 @@ export default {
     svg {
       width: 20px;
       height: 20px;
+      margin-left: 1px;
     }
   }
 }

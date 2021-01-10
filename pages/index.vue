@@ -10,7 +10,11 @@
     </div>
     <div v-if="!hasStarted" class="textbox">
       <Info class="info" />
-      <textarea v-model="text" class="textarea" placeholder="Enter your text here" />
+      <textarea
+        v-model="text"
+        class="textarea"
+        placeholder="Enter your text here"
+      />
       <div class="button" @click="start">
         Start
       </div>
@@ -22,11 +26,12 @@
     <MediaBar
       v-if="hasStarted"
       :on-stop="onStop"
-      :on-start="onStart"
+      :on-play="onPlay"
       :on-jump="onJump"
       :is-playing="isPlaying"
       :speed="speed"
       :on-speed-change="onSpeedChange"
+      :on-restart="onRestart"
     />
     <BottomBar
       v-if="hasStarted"
@@ -35,7 +40,7 @@
       :split-size="splitSize"
       :on-split-size-change="onSplitSizeChange"
     />
-    <EditButton v-if="hasStarted" />
+    <EditButton v-if="hasStarted" :on-edit="onEdit" />
   </div>
 </template>
 
@@ -69,26 +74,45 @@ export default Vue.extend({
       splitSize: 1 as number
     }
   },
-
+  mounted () {
+    const text = sessionStorage.getItem("text")
+    const splitSize = sessionStorage.getItem("splitSize")
+    const index = sessionStorage.getItem("index")
+    this.text = text || ""
+    this.splitSize = splitSize ? Number(splitSize) : 1
+    this.index = Number(index)
+  },
   methods: {
     start () {
       if (this.text.length) {
         this.hasStarted = true
       }
-      this.isPlaying = true
+      if (this.index > this.dataSet.length) {
+        this.index = 0
+      }
+      sessionStorage.setItem("text", this.text)
       this.splitText()
-
+      this.isPlaying = true
       this.currentInterval = setInterval(() => {
+        if (this.index >= this.dataSet.length) {
+          this.isPlaying = false
+        }
         if (this.isPlaying) {
-          this.onJump(this.splitSize)
+          sessionStorage.setItem("splitSize", this.splitSize.toString())
+          sessionStorage.setItem("index", this.index.toString())
+          this.onJump(1)
         }
       }, 2000 - this.speed)
     },
 
     chunk (arr: Array<string>, chunkSize: number) {
-      if (chunkSize <= 0) { throw "Invalid chunk size" }
+      if (chunkSize <= 0) {
+        this.splitSize = 1
+      }
       const Arr = []
-      for (let i = 0, len = arr.length; i < len; i += chunkSize) { Arr.push(arr.slice(i, i + chunkSize)) }
+      for (let i = 0, len = arr.length; i < len; i += chunkSize) {
+        Arr.push(arr.slice(i, i + chunkSize))
+      }
       return Arr
     },
 
@@ -99,7 +123,7 @@ export default Vue.extend({
       ).map((item: Array<string>) => item.join(" "))
     },
 
-    onStart () {
+    onPlay () {
       this.isPlaying = true
     },
 
@@ -114,15 +138,33 @@ export default Vue.extend({
     },
 
     onJump (count: number) {
-      if (this.index + count <= this.dataSet.length && this.index + count > -1) {
+      if (this.index + count >= this.dataSet.length) {
+        this.index = this.dataSet.length
+      } else if (this.index + count < -1) {
+        this.index = 0
+      } else {
         this.index += count
-        this.currentWords = this.dataSet[this.index]
       }
+      this.currentWords = this.dataSet[this.index]
     },
 
     onSplitSizeChange (count: number) {
       this.splitSize += count
       this.splitText()
+    },
+
+    onRestart () {
+      this.index = 0
+      this.currentWords = this.dataSet[this.index]
+    },
+
+    onEdit () {
+      sessionStorage.setItem("splitSize", "1")
+      sessionStorage.setItem("index", "0")
+      this.index = 0
+      this.splitSize = 1
+      this.isPlaying = false
+      this.hasStarted = false
     }
   }
 })
@@ -130,12 +172,14 @@ export default Vue.extend({
 
 <style lang="scss">
 @font-face {
-  font-family: 'Reenie Beanie';
+  font-family: "Reenie Beanie";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("../assets/ReenieBeanie-Regular.ttf") format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  src: url("../assets/ReenieBeanie-Regular.ttf") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
 }
 @keyframes slide-right-writer {
   from {
@@ -337,7 +381,9 @@ export default Vue.extend({
 }
 @media screen and (max-width: 568px) {
   .container {
-    .heading { font-size: 35px }
+    .heading {
+      font-size: 35px;
+    }
   }
   .container .reading-section .word {
     font-size: 30px;
@@ -345,5 +391,4 @@ export default Vue.extend({
     padding-bottom: 50px;
   }
 }
-
 </style>

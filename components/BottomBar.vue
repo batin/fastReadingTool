@@ -43,11 +43,13 @@ export default {
     font-size: 24px;
     font-family: "Reenie Beanie";
     letter-spacing: 1.5px;
+    cursor: default;
   }
   .left {
     left: 0;
     div {
       position: absolute;
+      cursor: pointer;
       &:first-child {
         left: 10px;
       }
@@ -59,6 +61,12 @@ export default {
   .right {
     right: 0;
     padding: 1vh 2vh;
+  }
+}
+
+@media screen and (max-width: 768px){
+  .bottom-media-bar {
+    width: 33vh;
   }
 }
 </style>
