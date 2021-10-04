@@ -41,6 +41,11 @@
       :on-split-size-change="onSplitSizeChange"
     />
     <EditButton v-if="hasStarted" :on-edit="onEdit" />
+    <Popup v-if="popupTrigger" class="popup-text-wrapper" :toggle-popup="togglePopup">
+      <p>
+        Please do not leave the text field blank
+      </p>
+    </Popup>
   </div>
 </template>
 
@@ -51,6 +56,7 @@ import Info from "@/assets/info.svg?inline"
 import HomepageIcon from "@/assets/homepage-icon.svg?inline"
 import MediaBar from "@/components/MediaBar.vue"
 import BottomBar from "@/components/BottomBar.vue"
+import Popup from "@/components/Popup.vue"
 
 export default Vue.extend({
   components: {
@@ -58,7 +64,8 @@ export default Vue.extend({
     Info,
     HomepageIcon,
     MediaBar,
-    BottomBar
+    BottomBar,
+    Popup
   },
 
   data () {
@@ -71,7 +78,8 @@ export default Vue.extend({
       hasStarted: false as boolean,
       isPlaying: false as boolean,
       currentInterval: 0 as any,
-      splitSize: 1 as number
+      splitSize: 1 as number,
+      popupTrigger: false as boolean
     }
   },
   mounted () {
@@ -86,6 +94,9 @@ export default Vue.extend({
     start () {
       if (this.text.length) {
         this.hasStarted = true
+      }
+      if (this.text.length === 0) {
+        this.popupTrigger = true
       }
       if (this.index > this.dataSet.length) {
         this.index = 0
@@ -103,6 +114,10 @@ export default Vue.extend({
           this.onJump(1)
         }
       }, 2000 - this.speed)
+    },
+
+    togglePopup () {
+      this.popupTrigger = !this.popupTrigger
     },
 
     chunk (arr: Array<string>, chunkSize: number) {
@@ -340,6 +355,9 @@ export default Vue.extend({
       font-weight: 200;
     }
   }
+  .popup-text-wrapper{
+    font-size: 32px;
+  }
 }
 
 @media screen and (min-width: 1280px) {
@@ -384,6 +402,10 @@ export default Vue.extend({
     .heading {
       font-size: 35px;
     }
+
+    .popup-text-wrapper{
+      font-size: 26px;
+  }
   }
   .container .reading-section .word {
     font-size: 30px;
