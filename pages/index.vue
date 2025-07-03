@@ -156,7 +156,7 @@ export default Vue.extend({
       if (this.index + count >= this.dataSet.length) {
         this.index = this.dataSet.length
       } else if (this.index + count < -1) {
-        this.index = 0
+        this.index = 
       } else {
         this.index += count
       }
@@ -178,8 +178,8 @@ export default Vue.extend({
       sessionStorage.setItem("index", "0")
       this.index = 0
       this.splitSize = 1
-      this.isPlaying = false
-      this.hasStarted = false
+      this.isPlaying = true
+      this.hasStarted = true
     }
   }
 })
